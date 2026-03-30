@@ -2856,8 +2856,13 @@ static void PokeSum_PrintSelectedMoveStats(void)
 {
     if (sMoveSelectionCursorPos < 5)
     {
+        u16 moveId;
+        u8 categoryIconIdx;
+
         if (sMonSummaryScreen->mode != PSS_MODE_SELECT_MOVE && sMoveSelectionCursorPos == 4)
             return;
+
+        moveId = sMonSummaryScreen->moveIds[sMoveSelectionCursorPos];
 
         AddTextPrinterParameterized3(sMonSummaryScreen->windowIds[POKESUM_WIN_TRAINER_MEMO], FONT_NORMAL,
                                      57, 1,
@@ -2869,11 +2874,32 @@ static void PokeSum_PrintSelectedMoveStats(void)
                                      sLevelNickTextColors[0], TEXT_SKIP_DRAW,
                                      sMonSummaryScreen->summary.moveAccuracyStrBufs[sMoveSelectionCursorPos]);
 
+        // Blit PSS category icon to the right of the power value.
+        // x=80 leaves room after the 3-digit power value (~75px), adjust if needed.
+        if (moveId != MOVE_NONE)
+        {
+            switch (gBattleMoves[moveId].category)
+            {
+            case MOVE_CATEGORY_PHYSICAL:
+                categoryIconIdx = MENU_INFO_ICON_PHYSICAL;
+                break;
+            case MOVE_CATEGORY_SPECIAL:
+                categoryIconIdx = MENU_INFO_ICON_SPECIAL;
+                break;
+            default: // MOVE_CATEGORY_STATUS
+                categoryIconIdx = MENU_INFO_ICON_STATUS;
+                break;
+            }
+
+            BlitMenuInfoIcon(sMonSummaryScreen->windowIds[POKESUM_WIN_TRAINER_MEMO],
+                             categoryIconIdx, 84, 2);
+        }
+
         AddTextPrinterParameterized4(sMonSummaryScreen->windowIds[POKESUM_WIN_TRAINER_MEMO], FONT_NORMAL,
                                      7, 42,
                                      0, 0,
                                      sLevelNickTextColors[0], TEXT_SKIP_DRAW,
-                                     gMoveDescriptionPointers[sMonSummaryScreen->moveIds[sMoveSelectionCursorPos] - 1]);
+                                     gMoveDescriptionPointers[moveId - 1]);
     }
 }
 
