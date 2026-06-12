@@ -3,7 +3,7 @@ CableClub_OnTransition::
 	end
 
 CableClub_EventScript_HideOrShowMysteryGiftMan::
-	goto_if_unset FLAG_SYS_GAME_CLEAR, EventScript_HideMysteryGiftMan
+	goto_if_unset FLAG_SYS_NATIONAL_DEX, EventScript_HideMysteryGiftMan
 	clearflag FLAG_HIDE_MG_DELIVERYMEN
 	return
 
